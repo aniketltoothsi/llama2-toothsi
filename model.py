@@ -64,32 +64,55 @@ def final_result(query):
     response = qa_result({'query': query})
     return response
 
-#chainlit code
-@cl.on_chat_start
-async def start():
+# #chainlit code
+# @cl.on_chat_start
+# async def start():
+#     chain = qa_bot()
+#     msg = cl.Message(content="Starting the bot...")
+#     await msg.send()
+#     msg.content = "Hi, Welcome to Toothsi Bot. What is your query?"
+#     await msg.update()
+
+#     cl.user_session.set("chain", chain)
+
+# @cl.on_message
+# async def main(message):
+#     chain = cl.user_session.get("chain") 
+#     cb = cl.AsyncLangchainCallbackHandler(
+#         stream_final_answer=True, answer_prefix_tokens=["FINAL", "ANSWER"]
+#     )
+#     cb.answer_reached = True
+#     res = await chain.acall(message, callbacks=[cb])
+#     answer = res["result"]
+#     sources = res["source_documents"]
+
+#     if sources:
+#         answer += f"\nSources:" + str(sources)
+#     else:
+#         answer += "\nNo sources found"
+
+#     await cl.Message(content=answer).send()
+
+@app.route('/', methods=['GET'])
+def ping():
+    return 'Pong'
+
+@app.route('/result', methods=['POST'])
+def detect_teeth():
+    query = request.json.get('query')
+
     chain = qa_bot()
-    msg = cl.Message(content="Starting the bot...")
-    await msg.send()
-    msg.content = "Hi, Welcome to Toothsi Bot. What is your query?"
-    await msg.update()
+    
+    res = await chain.acall(query)
+    answer = res["result"]    
+    print("aniket",res, "nilesh", answer)
 
-    cl.user_session.set("chain", chain)
+    # Extract the actual response from the generated response
+    # answer = response['answers'][0]['answer'] if 'answers' in response else "No answer found"
 
-@cl.on_message
-async def main(message):
-    chain = cl.user_session.get("chain") 
-    cb = cl.AsyncLangchainCallbackHandler(
-        stream_final_answer=True, answer_prefix_tokens=["FINAL", "ANSWER"]
-    )
-    cb.answer_reached = True
-    res = await chain.acall(message, callbacks=[cb])
-    answer = res["result"]
-    sources = res["source_documents"]
+    return jsonify({"answer": answer})      
 
-    if sources:
-        answer += f"\nSources:" + str(sources)
-    else:
-        answer += "\nNo sources found"
 
-    await cl.Message(content=answer).send()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
 
