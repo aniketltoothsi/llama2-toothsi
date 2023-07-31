@@ -1,3 +1,4 @@
+from flask import Flask, request, jsonify
 from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain import PromptTemplate
 from langchain.embeddings import HuggingFaceEmbeddings
@@ -7,7 +8,8 @@ from langchain.chains import RetrievalQA
 import chainlit as cl
 
 DB_FAISS_PATH = 'vectorstore/db_faiss'
-
+app = Flask(__name__)
+CORS(app)
 custom_prompt_template = """Use the following pieces of information to answer the user's question.
 If you don't know the answer, just say that you don't know, don't try to make up an answer.
 
