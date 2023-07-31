@@ -6,7 +6,7 @@ from langchain.vectorstores import FAISS
 from langchain.llms import CTransformers
 from langchain.chains import RetrievalQA
 import chainlit as cl
-
+from flask_cors import CORS
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 app = Flask(__name__)
 CORS(app)
