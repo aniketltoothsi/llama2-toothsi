@@ -98,7 +98,7 @@ def ping():
     return 'Pong'
 
 @app.route('/result', methods=['POST'])
-def detect_teeth():
+async def detect_teeth():
     query = request.json.get('query')
 
     chain = qa_bot()
