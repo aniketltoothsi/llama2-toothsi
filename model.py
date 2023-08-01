@@ -45,7 +45,7 @@ def load_llm():
         model = "llama-2-7b.bin",
         model_type="llama",
         max_new_tokens = 512,
-        temperature = 0.25
+        temperature = 0.40
     )
     return llm
 
